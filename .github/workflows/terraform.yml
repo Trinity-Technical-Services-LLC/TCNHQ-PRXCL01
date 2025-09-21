@@ -27,7 +27,7 @@ jobs:
       TF_VAR_PROXMOX_ENDPOINT: ${{ secrets.PROXMOX_ENDPOINT }}
       TF_VAR_PROXMOX_TOKEN_ID: ${{ secrets.PROXMOX_TOKEN_ID }}
       TF_VAR_PROXMOX_TOKEN_SECRET: ${{ secrets.PROXMOX_TOKEN_SECRET }}
-      TF_VAR_PROXMOX_VERIFY_TLS: ${{ env.PROXMOX_VERIFY_TLS }}
+      TF_VAR_PROXMOX_VERIFY_TLS: ${{ vars.PROXMOX_VERIFY_TLS || 'true' }}
 
     steps:
       - name: Checkout GitHub Repository

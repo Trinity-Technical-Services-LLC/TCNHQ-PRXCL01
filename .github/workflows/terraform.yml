@@ -1,0 +1,59 @@
+name: "Proxmox Cluster"
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  id-token: write
+  pull-requests: read
+
+concurrency:
+  group: tf-tcnhq-prxcl01-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  terraform:
+    runs-on: [ self-hosted ]
+    env:
+      # AWS Variables
+      TF_VAR_AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+      TF_VAR_AWS_REGION:    ${{ secrets.AWS_REGION }}
+      TF_VAR_BACKEND_KEY:  "${{ github.event.repository.name }}/terraform.tfstate"
+
+      # Proxmox Variables
+      TF_VAR_PROXMOX_ENDPOINT: ${{ secrets.PROXMOX_ENDPOINT }}
+      TF_VAR_PROXMOX_TOKEN_ID: ${{ secrets.PROXMOX_TOKEN_ID }}
+      TF_VAR_PROXMOX_TOKEN_SECRET: ${{ secrets.PROXMOX_TOKEN_SECRET }}
+      TF_VAR_PROXMOX_VERIFY_TLS: ${{ env.PROXMOX_VERIFY_TLS }}
+
+    steps:
+      - name: Checkout GitHub Repository
+        uses: actions/checkout@v4
+
+      - name: Initalize Temporary AWS Credentials (via OIDC)
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume:     ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region:         ${{ secrets.AWS_REGION }}
+          mask-aws-account-id: true
+
+      - name: Terraform Init
+        run: |
+          terraform init                                                                `
+            -backend-config="bucket=${{ secrets.AWS_S3_BUCKET }}"                       `
+            -backend-config="encrypt=true"                                              `
+            -backend-config="key=${{ github.event.repository.name }}/terraform.tfstate" `
+            -backend-config="region=${{ secrets.AWS_REGION }}"
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve tfplan

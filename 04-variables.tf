@@ -3,12 +3,12 @@ variable "PROXMOX_ENDPOINT" {
   description = "Proxmox API endpoint, e.g., https://10.69.128.49:8006/"
 }
 
-variable "PROXMOX_API_TOKEN_ID" {
+variable "PROXMOX_TOKEN_ID" {
   type        = string
   description = "Proxmox API token ID (format: user@realm!token-name)"
 }
 
-variable "PROXMOX_API_TOKEN_SECRET" {
+variable "PROXMOX_TOKEN_SECRET" {
   type        = string
   sensitive   = true
   description = "Proxmox API token secret string"

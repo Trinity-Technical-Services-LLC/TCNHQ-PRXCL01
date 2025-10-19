@@ -24,10 +24,10 @@ jobs:
       TF_VAR_BACKEND_KEY:  "${{ github.event.repository.name }}/terraform.tfstate"
 
       # Proxmox Variables
-      TF_VAR_PROXMOX_ENDPOINT: ${{ secrets.PROXMOX_ENDPOINT }}
-      TF_VAR_PROXMOX_TOKEN_ID: ${{ secrets.PROXMOX_TOKEN_ID }}
-      TF_VAR_PROXMOX_TOKEN_SECRET: ${{ secrets.PROXMOX_TOKEN_SECRET }}
-      TF_VAR_PROXMOX_VERIFY_TLS: ${{ vars.PROXMOX_VERIFY_TLS || 'true' }}
+      TF_VAR_proxmox_hostname:         "${{ secrets.PROXMOX_HOSTNAME }}"
+      TF_VAR_proxmox_api_token_id:     "${{ secrets.PROXMOX_TOKEN_ID }}"
+      TF_VAR_proxmox_api_token_secret: "${{ secrets.PROXMOX_TOKEN_SECRET }}"
+      TF_VAR_proxmox_skip_tls_verify:  "${{ vars.PROXMOX_VERIFY_TLS || 'true' }}"
 
     steps:
       - name: Checkout GitHub Repository

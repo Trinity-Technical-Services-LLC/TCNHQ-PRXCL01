@@ -1,17 +1,24 @@
 all_proxmox_pools = [
   {
     pool_id = "tmpl-golden-pkr"
-    comment = "Golden VM templates built by Packer"
+    comment = "Golden VM Templates Built By Packer"
     permissions = [
       {
-        token_id  = "root@pam!proxmox-terraform-framework"
-        role_id   = "PVETemplateUser"
         propagate = true
+        role_id   = "PVETemplateUser"
+        token_id  = "root@pam!proxmox-terraform-framework"
       }
     ]
   },
   {
     pool_id = "svc-herowars-core"
-    comment = "Hero Wars service group: 3x simulation servers, Web Orchestrator, and Hono server (RBAC/backup scope)."
+    comment = "Hero Wars Services Group"
+    permissions = [
+      {
+        propagate = true
+        role_id   = "PVEVMAdmin"
+        token_id  = "root@pam!proxmox-terraform-framework"
+      }
+    ]
   },
 ]

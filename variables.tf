@@ -43,7 +43,7 @@ variable "proxmox_skip_tls_verify" {
           list(
             object({
               group_id  = optional(string)
-              propogate = bool
+              propagate = bool
               role_id   = string
               token_id  = optional(string)
               user_id   = optional(string)

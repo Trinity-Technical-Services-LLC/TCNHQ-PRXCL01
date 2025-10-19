@@ -6,7 +6,7 @@ all_proxmox_pools = [
       {
         token_id  = "root@pam!proxmox-terraform-framework"
         role_id   = "PVETemplateUser"
-        propogate = true
+        propagate = true
       }
     ]
   },

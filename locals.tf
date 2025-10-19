@@ -11,7 +11,7 @@ locals {
     for pool in var.all_proxmox_pools : pool.pool_id => merge([
       for idx, acl in try(pool.permissions, []) : {
         "${pool.pool_id}-acl-${idx}" = {
-          path      = "/pool/${p.pool_id}"
+          path      = "/pool/${pool.pool_id}"
           role_id   = acl.role_id
           propagate = acl.propagate
           token_id  = try(acl.token_id, null)

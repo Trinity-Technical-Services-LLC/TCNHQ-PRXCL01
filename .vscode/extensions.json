@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    "HashiCorp.terraform",
+    "HashiCorp.HCL",
+    "redhat.vscode-yaml",
+    "timonwong.shellcheck",
+    "GitHub.vscode-github-actions",
+    "ms-vscode-remote.remote-containers",
+    "ms-azuretools.vscode-containers",
+    "ms-azuretools.vscode-docker",
+  ],
+  "unwantedRecommendations": [
+    "mauve.terraform"
+  ]
+}

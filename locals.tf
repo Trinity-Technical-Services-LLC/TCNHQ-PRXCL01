@@ -7,19 +7,18 @@ locals {
     }
   }
 
-  all_proxmox_pool_acls = {
-    for pool in var.all_proxmox_pools : pool.pool_id => merge([
-      for idx, acl in try(pool.permissions, []) : {
-        "${pool.pool_id}-acl-${idx}" = {
-          path      = "/pool/${pool.pool_id}"
-          role_id   = acl.role_id
-          propagate = acl.propagate
-          token_id  = try(acl.token_id, null)
-          user_id   = try(acl.user_id, null)
-          group_id  = try(acl.group_id, null)
-        }
+  all_proxmox_pool_acls = merge([
+    for pool in var.all_proxmox_pools : {
+      for idx, acl in try(pool.permissions, []) :
+      "${pool.pool_id}-acl-${idx}" => {
+        path      = "/pool/${pool.pool_id}"
+        role_id   = acl.role_id
+        propagate = acl.propagate
+        token_id  = try(acl.token_id, null)
+        user_id   = try(acl.user_id, null)
+        group_id  = try(acl.group_id, null)
       }
-    ]...)
-  }
+    }
+  ]...)
 
 }

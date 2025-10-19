@@ -39,6 +39,18 @@ variable "proxmox_skip_tls_verify" {
       object({
         pool_id = string
         comment = string
+        permissions = optional(
+          list(
+            object({
+              group_id  = optional(string)
+              propogate = bool
+              role_id   = string
+              token_id  = optional(string)
+              user_id   = optional(string)
+            })
+          ),
+          []
+        )
       })
     )
 
@@ -68,6 +80,19 @@ variable "proxmox_skip_tls_verify" {
         for p in var.all_proxmox_pools : can(regex("\\S", p.comment))
       ])
       error_message = "Each comment must contain at least one non-whitespace character."
+    }
+
+    # Validate principal exclusivity: exactly one of token_id, user_id, group_id
+    validation {
+      condition = alltrue(flatten([
+        for p in var.all_proxmox_pools : [
+          for a in (try(p.permissions, [])) :
+          length(compact([
+            try(a.token_id, null), try(a.user_id, null), try(a.group_id, null)
+          ])) == 1
+        ]
+      ]))
+      error_message = "Each permission must set exactly one of token_id, user_id, or group_id."
     }
 
   }

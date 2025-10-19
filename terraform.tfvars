@@ -2,6 +2,13 @@ all_proxmox_pools = [
   {
     pool_id = "tmpl-golden-pkr"
     comment = "Golden VM templates built by Packer"
+    permissions = [
+      {
+        token_id  = "root@pam!proxmox-terraform-framework"
+        role_id   = "PVETemplateUser"
+        propogate = true
+      }
+    ]
   },
   {
     pool_id = "svc-herowars-core"
